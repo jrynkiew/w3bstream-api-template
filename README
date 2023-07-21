@@ -1,0 +1,19 @@
+# Make sure you have the following tools installed:
+
+```
+sudo apt install httpie
+sudo apt install python3-pip
+pip install --upgrade pip setuptools
+pip install --upgrade httpie
+sudo pip install httpie-bearer-auth
+```
+
+in a linux terminal, from the root of this project, use the command
+
+`source .env`
+
+this will output some text - these are commands you can use to trigger w3bstream events.
+
+
+
+
