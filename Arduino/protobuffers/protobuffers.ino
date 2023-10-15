@@ -11,8 +11,12 @@ char ssid[]                   = SECRET_SSID;      // your network SSID (name)
 char pass[]                   = SECRET_PASS;      // your network password (use for WPA, or use as key for WEP)
 const char broker[]           = "192.168.0.208";  // MQTT broker IP
 int port                      = 1883;             // MQTT port
-const char topic[]            = "eth_0x794f72d75ded3903dea907f420ad85b4813f6385_asd"; // MQTT topic
-char token[]                  = "w3b_MV8xNjk3MjEzMzY1X2cyUj98STpkbWQnXA"; // MQTT token
+const char topic[]            = "eth_0x794f72d75ded3903dea907f420ad85b4813f6385_asd"; // w3bstream MQTT topic
+const char* token             = "w3b_MV8xNjk3MjEzMzY1X2cyUj98STpkbWQnXA"; // w3bstream token
+const char* payload           = "Hello World!";   // message to send to w3bstream
+const char* event_type        = "DEFAULT";        // w3bstream event type
+const char* pub_id            = "1";              // w3bstream publisher id
+const char* event_id          = "1";              // w3bstream event id
 unsigned int localPort        = 2390;             // local port to listen for UDP packets
 const int NTP_PACKET_SIZE     = 48;               // NTP timestamp is in the first 48 bytes of the message
 const long interval           = 10000;            // interval at which to send message (milliseconds)
@@ -97,17 +101,7 @@ int64_t getUnixTimestamp() {
 
 bool encode_string(pb_ostream_t *stream, const pb_field_t *field, void * const *arg)
 {
-    char *str = token;
-    
-    if (!pb_encode_tag_for_field(stream, field))
-        return false;
-    
-    return pb_encode_string(stream, (uint8_t*)str, strlen(str));
-}
-
-bool encode_string2(pb_ostream_t *stream, const pb_field_t *field, void * const *arg)
-{
-    char *str = "DEFAULT";
+    char *str = (char*)(*arg);
     
     if (!pb_encode_tag_for_field(stream, field))
         return false;
@@ -172,13 +166,20 @@ void setup() {
   stream = pb_ostream_from_buffer(buffer, 1024);
 
   message.has_header = true;
+  message.header.pub_time = getUnixTimestamp();
+
+  message.header.event_type.arg = (void*)event_type;
+  message.header.pub_id.arg = (void*)pub_id;
+  message.header.token.arg = (void*)token;
+  message.header.event_id.arg = (void*)event_id;
+  message.payload.arg = (void*)payload;
+
   message.header.event_type.funcs.encode = &encode_string2;
   message.header.pub_id.funcs.encode = &encode_string;
   message.header.token.funcs.encode = &encode_string;
-  message.header.pub_time = getUnixTimestamp();
   message.header.event_id.funcs.encode = &encode_string;
   message.payload.funcs.encode = &encode_string;
-
+  
   pb_encode(&stream, Event_fields, &message);
 }
  
