@@ -174,7 +174,7 @@ void setup() {
   message.header.event_id.arg = (void*)event_id;
   message.payload.arg = (void*)payload;
 
-  message.header.event_type.funcs.encode = &encode_string2;
+  message.header.event_type.funcs.encode = &encode_string;
   message.header.pub_id.funcs.encode = &encode_string;
   message.header.token.funcs.encode = &encode_string;
   message.header.event_id.funcs.encode = &encode_string;
