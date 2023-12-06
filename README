@@ -1,4 +1,11 @@
-# Make sure you have the following tools installed:
+# Arduino
+You can compile the Arduino library locally, all libraries necessary are included in this reporsitory, all you need is a Nano 33 IoT and copy the libraries into your Arduino libraries folder. 
+Modify the ino file and the secrets.h with your specific needs, and it should generate valid w3bstream packets encoded using the protobuf encoding.
+
+Alternatively, you can use http or pub_client.
+
+# http or pub_client 
+Make sure you have the following tools installed:
 
 ```
 sudo apt install httpie
